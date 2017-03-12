@@ -10,8 +10,8 @@ $count_text=0;         //the number of current text cell
 <!--the first line in the form -->
 <tr>
   <?php
-  echo "<td>statement(s)</td>";
-  for($i=0;$i<sizeof($var);$i++)
+  echo "<td>statement(s)</td>";                     //current statement
+  for($i=0;$i<sizeof($var);$i++)                    //how many columns
   {
     echo "<td>$var[$i]</td>";
   }
@@ -21,51 +21,39 @@ $count_text=0;         //the number of current text cell
 <!--the second line in the form -->
 <?php
   echo "<tr>";
-  echo "<td>s$count_line</td>";
+  echo "<td>s$count_line</td>";                       //current statement
   $count_line++;
     for($i=0;$i<sizeof($var);$i++)
     {
-      echo '<td><input type="text" name=$text[$count_text]></td>';
+      echo '<td><input type="text" name=$text[$count_text]></td>';   //one cell
       $count_text++;
     }
    echo "</tr>";
    ?>
-
+<!--create 100 lines-->
 <?php
-if(isset($_POST["add"]))
+$p=0;
+while($p<100)
 {
-  for($i=0; $i<$count_line; $i++)
+  if(isset($_POST["add"]))                         //if "add" is clicked, but have some issues
   {
-  echo "<tr>";
-    echo "<td>s$count_line</td>";
-    $count_line++;
-      for($i=0;$i<sizeof($var);$i++)
-      {
-        echo '<td><input type="text" name=$text[$count_text]></td>';
-        $count_text++;
-      }
-  echo "</tr>";
+    echo "<tr>";
+      echo "<td>s$count_line</td>";
+      $count_line++;
+        for($i=0;$i<sizeof($var);$i++)
+        {
+          echo '<td><input type="text" name=$text[$count_text]></td>';
+          $count_text++;
+        }
+    echo "</tr>";
   }
+  $p++;
 }
-/*
-function clickadd()
-{
-  echo '<tr>';
-  echo '<td><input type="text" name="text"></td>';
-  echo '<td><input type="text" name="text"></td>';
-  echo '<td><input type="text" name="text"></td>';
-  echo '</tr>';
-
-  for($i=0;$i<sizeof($var);$i++)
-  {
-    echo '<td><input type="text" name="text"></td>';
-  }
-}
-*/
 
  ?>
+ <!-- create two buttons-->
     </table><br><br>
-    <input type="submit" name="add" value="Add">
+    <input type="submit" name="add" value="Add">              
     &nbsp;&nbsp;
     <input type="submit" name="submit" value="Submit">
 
