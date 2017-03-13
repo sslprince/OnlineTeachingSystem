@@ -1,10 +1,14 @@
+
+<form action="index.php" method="GET">
+
 <?php
+error_reporting(0);
 $var=array("x", "y", "z");
 $count_line=0;         //how many line so far
 $count_text=0;         //the number of current text cell
+$text=array();
 ?>
 
-<form action="index.php" method="POST">
 <table id="table1" border="1">
 
 <!--the first line in the form -->
@@ -25,44 +29,68 @@ $count_text=0;         //the number of current text cell
   $count_line++;
     for($i=0;$i<sizeof($var);$i++)
     {
-      echo '<td><input type="text" name=$text[$count_text]></td>';   //one cell
-      $count_text++;
+      echo '<td><input type="text" name="text[]"</td>';   //one cell
     }
    echo "</tr>";
    ?>
 <!--create 100 lines-->
 <?php
-$p=0;
-while($p<100)
-{
-  if(isset($_POST["add"]))                         //if "add" is clicked, but have some issues
-  {
-    echo "<tr>";
-      echo "<td>s$count_line</td>";
-      $count_line++;
-        for($i=0;$i<sizeof($var);$i++)
-        {
-          echo '<td><input type="text" name=$text[$count_text]></td>';
-          $count_text++;
-        }
-    echo "</tr>";
-  }
-  $p++;
-}
 
  ?>
- <!-- create two buttons-->
+ <?php
+
+ $p=0;
+   if(isset($_GET["add"]))                         //if "add" is clicked, but have some issues
+   {
+     while($p<6)
+     {
+       echo "<tr>";
+       echo "<td>s$count_line</td>";
+       $count_line++;
+         for($i=0;$i<sizeof($var);$i++)
+         {
+           echo '<td><input type="text" name="text[]"></td>';
+         }
+     echo "</tr>";
+     $p++;
+     }
+   }
+
+ /*
+ if(isset($_POST['add']))
+ {
+   echo "<tr>";
+   echo "<td>s$count_line</td>";
+   $count_line++;
+   for($i=0;$i<sizeof($var);$i++)
+   {
+     echo '<td><input type="text" name=$text[$count_text]></td>';
+     $count_text++;
+   }
+   echo "</tr>";
+
+ }
+ */
+
+  ?>
     </table><br><br>
-    <input type="submit" name="add" value="Add">              
+    <input type="submit" name="add" value="Add">
     &nbsp;&nbsp;
     <input type="submit" name="submit" value="Submit">
 
-</form>
+  </form>
+
+
 
 <?php
- ?>
+foreach($_GET['text'] as $text)
+{
+  echo $text;
+  ?>
+  <br>
+  <?php
+}
 
-<?php
 //<button id="button1" type="button" onclick="clickbutton()">Add</button>
 
 ?>
