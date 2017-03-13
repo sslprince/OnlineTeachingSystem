@@ -2,7 +2,7 @@
 <form action="index.php" method="GET">
 
 <?php
-error_reporting(0);
+//error_reporting(0);
 $var=array("x", "y", "z");
 $count_line=0;         //how many line so far
 $count_text=0;         //the number of current text cell
@@ -83,8 +83,10 @@ $text=array();
 
 
 <?php
+$myfile=fopen('result.txt','w');
 foreach($_GET['text'] as $text)
 {
+  fwrite($myfile,"$text\n");
   echo $text;
   ?>
   <br>
