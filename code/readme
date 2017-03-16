@@ -6,3 +6,7 @@ tutorial
 
 ------------------------------------
 1.have some issues for "add" button in index.php, how can we add multi lines by multi clicking
+       trying reset the condtion of button
+2.work out the problem of output for the textarea after clicking submit
+3. For gdb, working out how to use grep and some commond to output the variable and their values in a program. In addition, trying how to make it easiler.
+4. working out how to connection the result with the database.
