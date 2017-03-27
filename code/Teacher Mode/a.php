@@ -1,4 +1,4 @@
-
+<?php include 'database.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,59 +68,44 @@
 <section class="row text-center places">
 <h1>Upload C Code</h1>
 <div class="col-6 col-sm-3 place">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Upload</button>
-</div>
-</section>
-
-<section class="row text-center placeholders">
-<h1>Students' Marks</h1>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>a.c</h4>
-<div class="text-muted">Something else</div>
-</div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>b.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>c.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>d.c</h4>
-<span class="text-muted">Something else</span>
-</div>
+<form action="upload_file.php" method="post"
+enctype="multipart/form-data">
+<label for="file">Filename:</label>
+<input type="file" name="file" id="file" />
+<br />
+<input type="submit" name="submit" value="Submit" />
+</form>
 </section>
 
 
-<section class="row text-center placeholders1">
-<h1>Error Analytics</h1>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>a.c</h4>
-<div class="text-muted">Something else</div>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>b.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>c.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>d.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-</section>
+<?php
+    $query = "SELECT * FROM file";
+    $shouts = mysqli_query($con,$query);
+   
+?>
 
+<html>
+<head>
+<meta charset="utf-8" />
+<title>SHOUT IT!</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+<body>
+<div id="shouts">
+<ul>
+<?php while($row = mysqli_fetch_assoc($shouts)) : ?>
+<li class = "shout"><span><strong><?php echo $row['name']?></li>
+<?php endwhile;?>
+</ul>
+</div>
+
+<br />
+<input class="shout-btn"type="submit" name ="submit" value = "shoot it out"/>
+</form>
+
+</div>
+</body>
+</html>
 
 
 <!-- Bootstrap core JavaScript
