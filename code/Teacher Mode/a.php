@@ -1,4 +1,5 @@
 <?php include 'database.php';?>
+<?php include 'header.php';?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,105 +8,87 @@
 
 
 
-<title>Memory Trace Teacher Mode</title>
-
-<!-- Bootstrap core CSS -->
-<link href="css/bootstrap.css" rel="stylesheet">
-
-<!-- Custom styles for this template -->
-<link href="css/teacher.css" rel="stylesheet">
-</head>
-
-<body>
-<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-<button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-<a class="navbar-brand" href="#">Teacher Mode</a>
-
-<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-<ul class="navbar-nav mr-auto">
-<li class="nav-item active">
-<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#">Student Mode</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#">Help</a>
-</li>
-</ul>
-<form class="form-inline mt-2 mt-md-0">
-<input class="form-control mr-sm-2" type="text" placeholder="Search">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
-</div>
-</nav>
-
-<div class="container-fluid">
-<div class="row">
-<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-<ul class="nav nav-pills flex-column">
-<li class="nav-item">
-<a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="a.php">Upload C Code</a>
-
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#">Students' Marks</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#">Error Analytics</a>
-</li>
-</ul>
-
-</nav>
-
-<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-<section class="row text-center places">
-<h1>Upload C Code</h1>
-<div class="col-6 col-sm-3 place">
-<form action="upload_file.php" method="post"
-enctype="multipart/form-data">
-<label for="file">Filename:</label>
-<input type="file" name="file" id="file" />
-<br />
-<input type="submit" name="submit" value="Submit" />
-</form>
-</section>
 
 
 <?php
     $query = "SELECT * FROM file";
     $shouts = mysqli_query($con,$query);
-   
-?>
+
+    ?>
 
 <html>
 <head>
 <meta charset="utf-8" />
-<title>SHOUT IT!</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/choose0.css" type="text/css" />
 </head>
 <body>
+</body>
+</html>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+<div class ="parent">
+<div class = "title"><b>Delete C Code</b></div>
+<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+
+
 <div id="shouts">
 <ul>
 <?php while($row = mysqli_fetch_assoc($shouts)) : ?>
-<li class = "shout"><span><strong><?php echo $row['name']?></li>
+<li class = "shout"><span><strong><input name ="input1" type="button" value="<?php echo $row['name']?>"/></li>
 <?php endwhile;?>
 </ul>
 </div>
 
+
+<script>
+window.onload = function() {
+    var btns = document.getElementsByName('input1');
+    for (var i = 0; i < btns.length; i++) {
+        btns[i]._index = i;
+        btns[i].onclick = function() {
+          var name =this.value;
+           var oText=document.getElementById('input2');
+           oText.value=name;
+        };
+    }
+};
+
+
+
+</script>
+
+<div id = "input">
+<?php if(isset($_GET['error'])) : ?>
+<div class = "error"><?php echo $_GET['error'];?></div>>
+<?php endif; ?>
+<form method = "post" action = "delete.php">
+
+<input id="input2" type="text" name ="message"placeholder = "enter a file name"/>
 <br />
-<input class="shout-btn"type="submit" name ="submit" value = "shoot it out"/>
+
+<br />
+<input class="shout-btn"type="submit" name ="submit" value = "delete"/>
 </form>
 
 </div>
-</body>
-</html>
+</div>
+
+
+<div class ="child">
+
+  <div class = "title">Upload C Code</div>
+<form action="upload_file.php" method="post"
+enctype="multipart/form-data">
+<div id = "input">
+<label for="file">Filename:</label>
+<input type="file" name="file" id="file" />
+<br />
+<input class="shout-btn"<input type="submit" name="submit" value="Submit" />
+</form>
+</div>
+</div>
+</div>
 
 
 <!-- Bootstrap core JavaScript
