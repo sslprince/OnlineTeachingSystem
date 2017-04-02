@@ -1,10 +1,13 @@
+<?php
+require 'connect.inc.php';
+
+ ?>
+
+
+
 <form action="login_2.php" method="POST">
   <?php
 
-  if(!mysql_connect('localhost', 'root', '') || !mysql_select_db('Memory tracer'))
-  {
-    die('no');
-  }
   $query = "SELECT `username`, `password` FROM `studentlist` ORDER BY `id`";
   if(!$query_run= mysql_query($query))
   {
@@ -19,7 +22,7 @@
        $password = $query_row['password'];
        if($username == $_POST['username'] && $password == $_POST['password'])
        {
-         header('Refresh: 1; URL = student_index.php');
+         header('Refresh: 1; URL = student_selectcode.php');
        }
      }
    }
@@ -41,10 +44,6 @@
 <form action="login_2.php" method="POST">
   <?php
 
-  if(!mysql_connect('localhost', 'root', '') || !mysql_select_db('Memory tracer'))
-  {
-    die('no');
-  }
   $query = "SELECT `username`, `password` FROM `teacherlist` ORDER BY `id`";
   if(!$query_run= mysql_query($query))
   {
