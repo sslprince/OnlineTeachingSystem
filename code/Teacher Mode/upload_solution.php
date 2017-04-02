@@ -5,17 +5,22 @@
     
     $name =$_SESSION['name'];
     $a = "";
-    $myfile = fopen("c.txt", "r") or die("Unable to open file!");
-    while(!feof($myfile)) {
-        $a = $a .fgets($myfile) . "<br>";
+    $file = "c.txt";
+    if(file_exists($file))
+    {
+        $myfile = fopen("c.txt", "r") or die("Unable to open file!");
+        while(!feof($myfile)) {
+            $a = $a .fgets($myfile) . "<br>";
+        }
+        echo $a;
+        $query ="UPDATE file SET solution = '$a' WHERE name = '$name'";
+        
+        $res = mysqli_query($con,$query);
+
     }
-    echo $a;
-
+    else
+    {
+        echo "Please create solution according to the instruction and try again";
+    }
 ?>
-<?php
-    $query ="UPDATE file SET solution = '$a' WHERE name = 'main.c'";
-    
-    $res = mysqli_query($con,$query);
-?>
-
 
