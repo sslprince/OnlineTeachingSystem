@@ -11,6 +11,7 @@ while(!feof($myfile)) {
   //echo $result;
 }
 fclose($myfile);
+echo "OK";
 
 
 $_SESSION['result_origin'] = $result_origin;

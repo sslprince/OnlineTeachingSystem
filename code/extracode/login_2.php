@@ -22,7 +22,7 @@ require 'connect.inc.php';
        $password = $query_row['password'];
        if($username == $_POST['username'] && $password == $_POST['password'])
        {
-         header('Refresh: 1; URL = student_index.php');
+         header('Refresh: 1; URL = student_selectcode.php');
        }
      }
    }

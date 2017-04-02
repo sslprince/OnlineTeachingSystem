@@ -1,4 +1,3 @@
-<form action="tracetable1.php" method="POST">
 
 <?php
 session_start();
@@ -50,8 +49,7 @@ $count_text=0;         //the number of current text cell
      }
    }
 
- /*
- if(isset($_POST['add']))
+ if(isset($_GET['add']))
  {
    echo "<tr>";
    echo "<td>s$count_line</td>";
@@ -64,14 +62,17 @@ $count_text=0;         //the number of current text cell
    echo "</tr>";
 
  }
- */
 
   ?>
     </table><br><br>
+    <form action="trace_table_test.php" method="POST">
     <input type="submit" name="submit" value="Submit">
     &nbsp;&nbsp;
-
-  </form>
+    </form>
+    <form action="trace_table_test.php" method="GET">
+    <input type="submit" name="add" value="Add">
+    &nbsp;&nbsp;
+    </form>
 
 
 
@@ -79,8 +80,8 @@ $count_text=0;         //the number of current text cell
 
 
 $_SESSION['count_line'] = $count_line;
-$_SESSION['p'] = $p;
-$_SESSION['text'] = $text;
+//$_SESSION['p'] = $p;
+//$_SESSION['text'] = $text;
 //<button id="button1" type="button" onclick="clickbutton()">Add</button>
 
 ?>

@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +51,11 @@
 <a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
 </li>
 <li class="nav-item">
-<a class="nav-link" href="#">Select code</a>
+<a class="nav-link" href="student_selectcode.php">Select code</a>
+</li>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="student_tracetable.php">Trace table</a>
 </li>
 </ul>
 
@@ -58,59 +63,129 @@
 
 <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
 <section class="row text-center places">
-<h1>Select code</h1>
-<div class="col-6 col-sm-3 place">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Upload</button>
-</div>
+<h1>Please fill in the trace table</h1>
 </section>
 
 <section class="row text-center placeholders">
-<h1>Students' Marks</h1>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>a.c</h4>
-<div class="text-muted">Something else</div>
+<div class="col-6 col-sm-3 place">
+<h1>Code:</h1>
+<textarea name="comment" rows="20" cols="60">
+<?php
+$code=$_SESSION['code'];
+foreach($code as $code_value)
+{
+  print "$code_value<br>";
+}
+ ?>
+</textarea>
 </div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>b.c</h4>
-<span class="text-muted">Something else</span>
+<div class="col-6 col-sm-3 place">
 </div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>c.c</h4>
-<span class="text-muted">Something else</span>
+<div class="col-6 col-sm-3 place">
+<h1>Trace&nbsp;table:</h1>
+  <?php
+  //error_reporting(0);
+  $var=$_SESSION['var'];
+  $count_line=0;         //how many line so far
+  $count_text=0;         //the number of current text cell
+
+  ?>
+
+  <table id="table1" border="1">
+
+  <!--the first line in the form -->
+  <tr>
+    <?php
+    echo "<td>statement(s)</td>";                     //current statement
+    for($i=0;$i<sizeof($var);$i++)                    //how many columns
+    {
+      echo "<td>$var[$i]</td>";
+    }
+    $_SESSION['var'] = $var;
+     ?>
+  </tr>
+
+  <!--the second line in the form -->
+  <?php
+    echo "<tr>";
+    echo "<td>s$count_line</td>";                       //current statement
+    $count_line++;
+      for($i=0;$i<sizeof($var);$i++)
+      {
+        echo '<td><input type="text" name="text[]"</td>';   //one cell
+      }
+     echo "</tr>";
+     ?>
+  <!--create 100 lines-->
+  <?php
+  for($z=0; $z<6; $z++)
+  {
+    echo "<tr>";
+    echo "<td>s$count_line</td>";                       //current statement
+    $count_line++;
+      for($i=0;$i<sizeof($var);$i++)
+      {
+        echo '<td><input type="text" name="text[]"</td>';   //one cell
+      }
+     echo "</tr>";
+  }
+
+   ?>
+   <?php
+
+     if(isset($_POST['text']) && !empty($_POST['text']))                         //if "add" is clicked, but have some issues
+     {
+       //echo "OK";
+       $text=$_POST['text'];
+       foreach($text as $value)
+       {
+         print "$value<br>";
+       }
+     }
+
+   if(isset($_GET['add']))
+   {
+     echo "<tr>";
+     echo "<td>s$count_line</td>";
+     $count_line++;
+     for($i=0;$i<sizeof($var);$i++)
+     {
+       echo '<td><input type="text" name=$text[$count_text]></td>';
+       $count_text++;
+     }
+     echo "</tr>";
+
+   }
+
+    ?>
+      </table><br><br>
+      <form action="student_tracetable.php" method="POST">
+      <input type="submit" name="submit" value="Submit">
+      </form>
+      &nbsp;
+      <form action="student_tracetable.php" method="GET">
+      <input type="submit" name="add" value="Add">
+      &nbsp;&nbsp;
+      </form>
+
+
+
+    <?php
+
+
+  $_SESSION['count_line'] = $count_line;
+  //$_SESSION['p'] = $p;
+  //$_SESSION['text'] = $text;
+  //<button id="button1" type="button" onclick="clickbutton()">Add</button>
+
+  ?>
 </div>
-<div class="col-6 col-sm-3 placeholder">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>d.c</h4>
-<span class="text-muted">Something else</span>
-</div>
+
 </section>
 
 
 <section class="row text-center placeholders1">
-<h1>Error Analytics</h1>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>a.c</h4>
-<div class="text-muted">Something else</div>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>b.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>c.c</h4>
-<span class="text-muted">Something else</span>
-</div>
-<div class="col-6 col-sm-3 placeholder1">
-<img src="data:image/gif;base64,R0lGODlhAQABAIABAADcgwAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
-<h4>d.c</h4>
-<span class="text-muted">Something else</span>
-</div>
+
 </section>
 
 
