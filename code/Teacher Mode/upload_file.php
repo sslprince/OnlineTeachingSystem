@@ -47,16 +47,27 @@
 
         global $a;
         $c="";
+        $a1="";
         $b =$_FILES["file"]["name"];
         $myfile = fopen($_FILES["file"]["tmp_name"], "r") or die("Unable to open file!");
+
         while(!feof($myfile)) {
-            $a = $a .fgets($myfile) . "<br>";
+            $a = $a .fgets($myfile);
 
         }
+
         echo $a;
         $query = "INSERT INTO file(name,source_file)VALUES('$b','$a')";
         $res = mysqli_query($con,$query);
         fclose($myfile);
+        $myfile1 = fopen($_FILES["file"]["tmp_name"], "r") or die("Unable to open file!");
+
+        while(!feof($myfile1)) {
+            $a1 = $a1 .fgets($myfile1) . "<br>";
+
+        }
+
+        echo $a1;
         $myfile1 = fopen($_FILES["file"]["tmp_name"], "r") or die("Unable to open file!");
         while(!feof($myfile1)) {
             $c = $c .fgets($myfile1);
