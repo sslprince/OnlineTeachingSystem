@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+include 'header_student.php';
+include 'database.php';
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,49 +21,8 @@
 </head>
 
 <body>
-<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-<button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-<a class="navbar-brand" href="#">Student Mode</a>
+<form action="student_selectcode.php" method="POST">
 
-<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-<ul class="navbar-nav mr-auto">
-<li class="nav-item active">
-<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#">Student Mode</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#">Help</a>
-</li>
-</ul>
-<form class="form-inline mt-2 mt-md-0">
-<input class="form-control mr-sm-2" type="text" placeholder="Search">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form>
-</div>
-</nav>
-
-<div class="container-fluid">
-<div class="row">
-<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
-<ul class="nav nav-pills flex-column">
-<li class="nav-item">
-<a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="student_selectcode.php">Select code</a>
-</li>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="student_tracetable.php">Trace table</a>
-</li>
-</ul>
-
-</nav>
 
 <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
 <section class="row text-center places">
@@ -68,48 +31,57 @@
 
 <section class="row text-center placeholders">
 <div class="col-6 col-sm-3 place">
-<form action="student_selectcode.php" method="POST">
-<select name="selectcode">
-  <option value="0">Please select</option>
-  <option value="value1">one variable</option>
-  <option value="value2">two variables</option>
+
+<select name="select">
+  <?php
+  $query = "SELECT `name` FROM `file` ";
+  if(!$query_run= mysql_query($query))
+  {
+    echo "fail";
+  }
+  echo "<option value='0'>Please select</option>";
+  while($query_row = @mysql_fetch_assoc($query_run))
+  {
+    foreach($query_row as $value)
+    ?>
+    <option value="<?php echo $value?>"><?php echo $value ?></option>";
+    <?php
+    $i++;
+  }
+   ?>
 
 </select>
-<br><br>
+<br><br><br><br><br><br><br>
 <input type="submit" name="submit" value="Submit">
-</form>
+
 </div>
+
 <div class="col-6 col-sm-3 place">
 <textarea name="comment" rows="20" cols="60">
 <?php
-$code=$_SESSION['code'];
-if(@$_POST['selectcode']=='value1')
-{
-  echo "code1";
-  ?>
-  <br>
-  <?php
-  foreach($code as $code_value)
+  if(@$_POST)
   {
-    print "$code_value<br>";
+    $a=$_POST['select'];
+    $_SESSION['a'] = $a;
+    $query = "SELECT `source_file` FROM `file` WHERE name='$a' ";
+    if(!$query_run= mysql_query($query))
+    {
+      echo "fail";
+    }
+    while($query_row = @mysql_fetch_assoc($query_run))
+    {
+      foreach($query_row as $value)
+      {
+        echo $value;
+      }
+    }
+
   }
-}
-if(@$_POST['selectcode']=='value2')
-{
-  echo "code2<br>";
-  ?>
-  <br>
-  <?php
-  foreach($code as $code_value)
-  {
-    print "$code_value<br>";
-  }
-}
- ?>
+?>
 </textarea>
+
 </div>
 </section>
-
 
 <section class="row text-center placeholders1">
 
@@ -126,5 +98,7 @@ if(@$_POST['selectcode']=='value2')
 <script src="js/bootstrap.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="js/ie10-viewport-bug-workaround.js"></script>
+</form>
 </body>
+
 </html>

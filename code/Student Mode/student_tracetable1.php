@@ -1,4 +1,5 @@
 <?php
+
 include 'header_student.php';
 include 'database.php';
 session_start();
@@ -40,12 +41,12 @@ foreach($code as $code_value)
 }
 */
 $query = "SELECT `source_file` FROM `file` WHERE name='$a' ";
-$start=100;
-$count1=0;
+$count=0;
 if(!$query_run= mysql_query($query))
 {
   echo "fail";
 }
+
 while($query_row = @mysql_fetch_assoc($query_run))
 {
   foreach($query_row as $value)
@@ -53,27 +54,46 @@ while($query_row = @mysql_fetch_assoc($query_run))
     $str1=$value;
   }
 }
-$code=(explode("\n",$str1));
-for($i=0;$i<sizeof($code);$i++)                    //how many columns
-{
-  if(!strcmp($code[$i],"int main(int argc, const char * argv[]) {"))
+$count1=0;
+$start=100;
+  $code=(explode("\n",$str1));
+  for($i=0;$i<sizeof($code);$i++)                    //how many columns
   {
-    $start=$i;
+    if(!strcmp($code[$i],"#include <stdio.h>"))
+    {
+      $start=$i;
+    }
+    if($i>=$start)
+    {
+      $a = $code[$i] . "<br>";
+      echo "$count1";
+      echo $a;
+      $count1++;
+    }
+    else
+    {
+      echo $code[$i];
+    }
+    /*
+    if(strcmp($code[$i],"#include <stdio.h>"))
+    {
+      $start=$count;
+      $count1=0;
+    }
+    if($count>=$start)
+    {
+      echo "$count1";
+      echo "$code[$i]";
+      $count1++;
+    }
+    else
+    {
+      echo $code[$i];
+    }
+    */
   }
-  if($i>=$start)
-  {
-    echo "$count1";
-    echo "    ";
-    echo "$code[$i]\n";
 
-    $count1++;
-  }
-  else
-  {
-    echo "    ";
-    echo "$code[$i]\n";
-  }
-}
+
 
 
  ?>
@@ -98,6 +118,7 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
                            <table class="" id="dynamic_field" border="1">
                                 <tr>
                                   <?php
+
                                   $var = array();
                                   $query = "SELECT `variable` FROM `file` WHERE name='$a' ";
                                   if(!$query_run= mysql_query($query))
@@ -117,6 +138,7 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
                                   {
                                     echo "<td>$var[$i]</td>";
                                   }
+
                                    ?>
                                 </tr>
                                 <tr>
@@ -174,7 +196,6 @@ $(document).ready(function(){
   //$_SESSION['p'] = $p;
   //$_SESSION['text'] = $text;
   //<button id="button1" type="button" onclick="clickbutton()">Add</button>
-
   ?>
 </div>
 
