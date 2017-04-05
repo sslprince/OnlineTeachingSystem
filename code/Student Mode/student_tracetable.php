@@ -183,29 +183,49 @@ $(document).ready(function(){
 <?php
 $x=@$_POST["text"];
 $y=@$_POST["s"];
-if(isset($x) && !empty($x) && isset($y) && !empty($y))
+$count_v=0;
+$count_s=0;
+for($i=0; $i<sizeof($x); $i++)
 {
-  for ($i=0; $i<sizeof($x); $i++)
+  if(isset($x[$i]) && !empty($x[$i]))
   {
-    $query_insert = "INSERT INTO results (result) VALUES ($x[$i])";
-    if(@$query_insert_run = mysql_query($query_insert))
-    {
-      echo "OK";
-    }
+    $count_v++;
   }
-  for($i=0; $i<sizeof($y); $i++)
-  {
-    $query_insert = "INSERT INTO statements (statement) VALUES ($y[$i])";
-    if(@$query_insert_run = mysql_query($query_insert))
-    {
-      echo "OK";
-    }
-  }
-  echo "\n";
-  echo "insert successfully";
 }
-else {
-  echo "please fill in !";
+for($i=0; $i<sizeof($y); $i++)
+{
+  if(isset($y[$i]) && !empty($y[$i]))
+  {
+    $count_s++;
+  }
+}
+if(isset($x) && !empty($x))
+{
+  if($count_s==sizeof($y) && $count_v==sizeof($x))
+  {
+    for ($i=0; $i<sizeof($x); $i++)
+    {
+      $query_insert = "INSERT INTO results (result) VALUES ($x[$i])";
+      if(@$query_insert_run = mysql_query($query_insert))
+      {
+        echo "OK";
+      }
+    }
+    for($i=0; $i<sizeof($y); $i++)
+    {
+      $query_insert = "INSERT INTO statements (statement) VALUES ($y[$i])";
+      if(@$query_insert_run = mysql_query($query_insert))
+      {
+        echo "OK";
+      }
+    }
+    echo "\n";
+    echo "insert successfully";
+  }
+  else {
+    echo "please fill in ! \nThere are some blanks!";
+  }
+
 }
 
 ?>
