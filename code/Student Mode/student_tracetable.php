@@ -1,7 +1,8 @@
 <?php
 include 'header_student.php';
 include 'database.php';
-session_start();
+//include 'result.php';
+@session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,8 +94,8 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
   <body>
        <div class="container">
             <div class="form-group">
-                 <form name="add_name" id="add_name">
                       <div class="table-responsive">
+                        <form name="add_name" id="add_name" method="POST" action="student_tracetable.php">
                            <table class="" id="dynamic_field" border="1">
                                 <tr>
                                   <?php
@@ -122,18 +123,18 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
                                 <tr>
                                   <?php
                                   echo '<td><input type="text" name="s[]" /></td>';                     //current statement
-                                  for($i=0;$i<sizeof($var)-2;$i++)                    //how many columns
+                                  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
                                   {
                                     echo '<td><input type="text" name="text[]" /></td>';
                                   }
                                    ?>
-                                     <td><input type="text" name="name[]" /></td>
+
                                 </tr>
                            </table>
                            <button type="button" name="add" id="add" class="btn btn-success">Add More</button>
-                           <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />
+                           <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
                       </div>
-                 </form>
+                </form>
             </div>
        </div>
   </body>
@@ -150,31 +151,75 @@ $(document).ready(function(){
        $('#row'+button_id+'').remove();
   });
   $('#submit').click(function(){
-       $.ajax({
-            url:"name.php",
-            method:"POST",
-            data:$('#add_name').serialize(),
-            success:function(data)
-            {
-                 alert(data);
-                 $('#add_name')[0].reset();
-            }
-       });
+    //alert("ok");
+    $.ajax({
+         url:"result.php",
+         method:"POST",
+         data:$('#add_name').serialize(),
+         success:function(data)
+         {
+              alert("data");
+              $('#add_name')[0].reset();
+
+         }
+    });
+    <?php
+/*
+    $myfile = fopen("result.txt", "w") or die("Unable to open file!");
+    for ($i=0; $i<sizeof($text); $i++)
+    {
+      $txt = "$text[$i]\n";
+      fwrite($myfile, $txt);
+    }
+    fclose($myfile);
+    */
+
+       ?>
   });
 });
 </script>
 
+<textarea>
+<?php
+$x=@$_POST["text"];
+$y=@$_POST["s"];
+if(isset($x) && !empty($x) && isset($y) && !empty($y))
+{
+  for ($i=0; $i<sizeof($x); $i++)
+  {
+    $query_insert = "INSERT INTO results (result) VALUES ($x[$i])";
+    if(@$query_insert_run = mysql_query($query_insert))
+    {
+      echo "OK";
+    }
+  }
+  for($i=0; $i<sizeof($y); $i++)
+  {
+    $query_insert = "INSERT INTO statements (statement) VALUES ($y[$i])";
+    if(@$query_insert_run = mysql_query($query_insert))
+    {
+      echo "OK";
+    }
+  }
+  echo "\n";
+  echo "insert successfully";
+}
+else {
+  echo "please fill in !";
+}
 
+?>
+</textarea>
 
 
     <?php
 
-
+    //print_r($_POST['text']);
   //$_SESSION['count_line'] = $count_line;
   //$_SESSION['p'] = $p;
   //$_SESSION['text'] = $text;
   //<button id="button1" type="button" onclick="clickbutton()">Add</button>
-
+//$_SESSION['text'] = $_POST[$text];
   ?>
 </div>
 

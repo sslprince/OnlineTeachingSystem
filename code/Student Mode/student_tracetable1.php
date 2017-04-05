@@ -1,8 +1,8 @@
 <?php
-
 include 'header_student.php';
 include 'database.php';
-session_start();
+//include 'result.php';
+@session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,12 +41,12 @@ foreach($code as $code_value)
 }
 */
 $query = "SELECT `source_file` FROM `file` WHERE name='$a' ";
-$count=0;
+$start=100;
+$count1=0;
 if(!$query_run= mysql_query($query))
 {
   echo "fail";
 }
-
 while($query_row = @mysql_fetch_assoc($query_run))
 {
   foreach($query_row as $value)
@@ -54,46 +54,27 @@ while($query_row = @mysql_fetch_assoc($query_run))
     $str1=$value;
   }
 }
-$count1=0;
-$start=100;
-  $code=(explode("\n",$str1));
-  for($i=0;$i<sizeof($code);$i++)                    //how many columns
+$code=(explode("\n",$str1));
+for($i=0;$i<sizeof($code);$i++)                    //how many columns
+{
+  if(!strcmp($code[$i],"int main(int argc, const char * argv[]) {"))
   {
-    if(!strcmp($code[$i],"#include <stdio.h>"))
-    {
-      $start=$i;
-    }
-    if($i>=$start)
-    {
-      $a = $code[$i] . "<br>";
-      echo "$count1";
-      echo $a;
-      $count1++;
-    }
-    else
-    {
-      echo $code[$i];
-    }
-    /*
-    if(strcmp($code[$i],"#include <stdio.h>"))
-    {
-      $start=$count;
-      $count1=0;
-    }
-    if($count>=$start)
-    {
-      echo "$count1";
-      echo "$code[$i]";
-      $count1++;
-    }
-    else
-    {
-      echo $code[$i];
-    }
-    */
+    $start=$i;
   }
+  if($i>=$start)
+  {
+    echo "$count1";
+    echo "    ";
+    echo "$code[$i]\n";
 
-
+    $count1++;
+  }
+  else
+  {
+    echo "    ";
+    echo "$code[$i]\n";
+  }
+}
 
 
  ?>
@@ -103,100 +84,67 @@ $start=100;
 </div>
 <div class="col-6 col-sm-3 place">
 <h1>Trace&nbsp;table:</h1>
-<html>
-  <head>
-       <title>Dynamically Add or Remove input fields in PHP with JQuery</title>
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  </head>
-  <body>
-       <div class="container">
-            <div class="form-group">
-                 <form name="add_name" id="add_name">
-                      <div class="table-responsive">
-                           <table class="" id="dynamic_field" border="1">
-                                <tr>
-                                  <?php
+<form name="add_name" id="add_name" action="student_tracetable1.php" method="POST">
+<table class="" id="dynamic_field" border="1">
+<tr>
+  <?php
+  $s=array();
+  $var = array();
+  $text=array();
+  $query = "SELECT `variable` FROM `file` WHERE name='$a' ";
+  if(!$query_run= mysql_query($query))
+  {
+    echo "fail";
+  }
+  while($query_row = @mysql_fetch_assoc($query_run))
+  {
+    foreach($query_row as $value)
+    {
+      $str=$value;
+    }
+  }
+  $var=(explode("\n",$str));
+  echo "<td>statement(s)</td>";                     //current statement
+  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
+  {
+    echo "<td>$var[$i]</td>";
+  }
+   ?>
+</tr>
+<tr>
+  <td><input type="text" name="s[]" value="1"/></td>
+  <?php
+  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
+  {
 
-                                  $var = array();
-                                  $query = "SELECT `variable` FROM `file` WHERE name='$a' ";
-                                  if(!$query_run= mysql_query($query))
-                                  {
-                                    echo "fail";
-                                  }
-                                  while($query_row = @mysql_fetch_assoc($query_run))
-                                  {
-                                    foreach($query_row as $value)
-                                    {
-                                      $str=$value;
-                                    }
-                                  }
-                                  $var=(explode("\n",$str));
-                                  echo "<td>statement(s)</td>";                     //current statement
-                                  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
-                                  {
-                                    echo "<td>$var[$i]</td>";
-                                  }
-
-                                   ?>
-                                </tr>
-                                <tr>
-                                  <?php
-                                  echo '<td><input type="text" name="s[]" /></td>';                     //current statement
-                                  for($i=0;$i<sizeof($var)-2;$i++)                    //how many columns
-                                  {
-                                    echo '<td><input type="text" name="text[]" /></td>';
-                                  }
-                                   ?>
-                                     <td><input type="text" name="name[]" /></td>
-                                </tr>
-                           </table>
-                           <button type="button" name="add" id="add" class="btn btn-success">Add More</button>
-                           <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />
-                      </div>
-                 </form>
-            </div>
-       </div>
-  </body>
-</html>
-<script>
-$(document).ready(function(){
-  var i=1;
-  $('#add').click(function(){
-       i++;
-       $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="s[]" /></td><td><input type="text" name="text[]" /></td><td><input type="text" name="text[]" /></td><td><input type="text" name="text[]" /></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
-  });
-  $(document).on('click', '.btn_remove', function(){
-       var button_id = $(this).attr("id");
-       $('#row'+button_id+'').remove();
-  });
-  $('#submit').click(function(){
-       $.ajax({
-            url:"name.php",
-            method:"POST",
-            data:$('#add_name').serialize(),
-            success:function(data)
-            {
-                 alert(data);
-                 $('#add_name')[0].reset();
-            }
-       });
-  });
-});
-</script>
-
-
-
-
-    <?php
-
-
-  //$_SESSION['count_line'] = $count_line;
-  //$_SESSION['p'] = $p;
-  //$_SESSION['text'] = $text;
-  //<button id="button1" type="button" onclick="clickbutton()">Add</button>
+    echo "<td><input type=\"text\" name=\"text[]\" value=\"2\" /></td>";
+  }
+    ?>
+</tr>
+</table>
+<textarea>
+  <?php
+  echo $_POST["s"][0];
   ?>
+</textarea>
+
+<button type="button" name="add" id="add" class="btn btn-success">Add More</button>
+<input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
+
+
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
 </div>
 
 </section>
