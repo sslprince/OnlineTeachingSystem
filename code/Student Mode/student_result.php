@@ -3,6 +3,30 @@ include 'header_student.php';
 include 'database.php';
 //include 'result.php';
 @session_start();
+//$result = $_SESSION['result'];
+//$x = $_SESSION['x'];
+$a=$_SESSION['a'];
+//$u=$_SESSION['username'];
+$x=@$_POST["text"];
+$y=@$_POST["s"];
+$str2=array();
+$c=0;
+$l=0;
+$query = "SELECT `solution` FROM `file` WHERE name='$a' ";
+if(!$query_run= mysql_query($query))
+{
+  echo "fail";
+}
+while($query_row = @mysql_fetch_assoc($query_run))
+{
+  foreach($query_row as $value)
+  {
+    $str2=$value;
+  }
+}
+$result=(explode("\n",$str2));
+array_pop($result);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +56,6 @@ include 'database.php';
 <h1>Code:</h1>
 <textarea name="comment" rows="20" cols="50">
 <?php
-$a=$_SESSION['a'];
 /*
 $code=$_SESSION['code'];
 foreach($code as $code_value)
@@ -95,8 +118,8 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
        <div class="container">
             <div class="form-group">
                       <div class="table-responsive">
-                        <form name="add_name" id="add_name" method="POST" action="student_result.php">
-                           <table class="" id="dynamic_field" border="1">
+                        <form name="add_name" id="add_name" method="POST" action="student_tracetable.php">
+                           <table class="table table-striped" id="dynamic_field" border="1">
                                 <tr>
                                   <?php
                                   $var = array();
@@ -120,19 +143,57 @@ for($i=0;$i<sizeof($code);$i++)                    //how many columns
                                   }
                                    ?>
                                 </tr>
-                                <tr>
-                                  <?php
-                                  echo '<td><input type="text" name="s[]" /></td>';                     //current statement
-                                  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
-                                  {
-                                    echo '<td><input type="text" name="text[]" /></td>';
-                                  }
-                                   ?>
 
-                                </tr>
+                                  <?php
+
+                                  if(sizeof($result)==sizeof($x))
+                                  {
+
+                                    for($i=0; $i<sizeof($result); $i++)
+                                    {
+                                      if($i % (sizeof($var)-1)==0)
+                                      {
+                                        echo "<tr>";
+                                        echo "<td>$y[$c]</td>";
+                                        if($result[$i] == $x[$i])
+                                        {
+                                          echo "<td>$result[$i]</td>";
+                                        }
+                                        else
+                                        {
+                                          echo "<td>wrong!</td>";
+                                        }
+                                        $c++;
+
+                                      }
+                                      else
+                                      {
+                                        if($result[$i] == $x[$i])
+                                        {
+                                          echo "<td>$result[$i]</td>";
+                                        }
+                                        else
+                                        {
+                                          echo "<td>wrong!</td>";
+                                          //$query_insert = "INSERT INTO Error (studentname, filename, errorline, studentinput) VALUES ($x[$i])";
+                                        }
+
+                                      }
+                                      if($l==sizeof($var)-2)
+                                      {
+                                        $l=-1;
+                                        echo "</tr>";
+                                      }
+                                      $l++;
+
+                                    }
+
+                                  }
+
+                                  ?>
+
+
                            </table>
-                           <button type="button" name="add" id="add" class="btn btn-success">Add Line</button>
-                           <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
                       </div>
                 </form>
             </div>
@@ -144,7 +205,7 @@ $(document).ready(function(){
   var i=1;
   $('#add').click(function(){
        i++;
-       $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="s[]" /></td><?php for($i=0;$i<sizeof($var)-1;$i++){ echo '<td><input type="text" name="text[]" /></td>'; } ?><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+       $('#dynamic_field').append('<tr id="row'+i+'"><td><?php for($i=0;$i<sizeof($var)-1;$i++){ echo '<input type="text" name="s[]" />'; } ?></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
   });
   $(document).on('click', '.btn_remove', function(){
        var button_id = $(this).attr("id");
@@ -158,16 +219,12 @@ $(document).ready(function(){
          data:$('#add_name').serialize(),
          success:function(data)
          {
-           /*
               alert("data");
               $('#add_name')[0].reset();
-              */
-
 
          }
     });
     <?php
-
 /*
     $myfile = fopen("result.txt", "w") or die("Unable to open file!");
     for ($i=0; $i<sizeof($text); $i++)
@@ -185,8 +242,6 @@ $(document).ready(function(){
 
 <textarea>
 <?php
-$x=@$_POST["text"];
-$y=@$_POST["s"];
 $count_v=0;
 $count_s=0;
 $result = array();
@@ -228,21 +283,6 @@ if(isset($x) && !empty($x))
     echo "\n";
     echo "insert successfully";
     */
-    $query = "SELECT `solution` FROM `file` WHERE name='$a' ";
-    if(!$query_run= mysql_query($query))
-    {
-      echo "fail";
-    }
-    while($query_row = @mysql_fetch_assoc($query_run))
-    {
-      foreach($query_row as $value)
-      {
-        $str2=$value;
-      }
-    }
-    $result=(explode("\n",$str2));
-    array_pop($result);
-
   }
   else {
     echo "please fill in ! \nThere are some blanks!";
@@ -250,18 +290,22 @@ if(isset($x) && !empty($x))
 
 }
 
+foreach($x as $value)
+{
+  echo $value;
+  echo "\n";
+}
+
 ?>
 </textarea>
 
 
     <?php
-    $_SESSION['result'] = $result;
-    $_SESSION['x'] = $x;
     if(sizeof($result)==sizeof($x))
     {
       for($i=0; $i<sizeof($result); $i++)
       {
-        if($result[$i] != $x[$i])
+        if($result[$i] == $x[$i])
         {
         }
       }
@@ -270,7 +314,6 @@ if(isset($x) && !empty($x))
     {
       echo "Please fill in again!";
     }
-
 
     //print_r($_POST['text']);
   //$_SESSION['count_line'] = $count_line;
