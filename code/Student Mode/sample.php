@@ -13,7 +13,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="dashboard.css" rel="stylesheet">
   </head>
 
   <body>
@@ -51,7 +51,7 @@
         <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
           <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-              <a class="nav-link active" href="student_index.php">Overview <span class="sr-only">(current)</span></a>
+              <a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Select code</a>
@@ -66,15 +66,16 @@
         </nav>
 
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-            <div style="text-align:center"><h1>Welcome!</h1></div>
+          <h1>Dashboard</h1>
 
-            <div style="text-align:center">
-              <h1>This is a student practice tool that can help you learn programming</h1>
+          <section class="row text-center placeholders">
+            <div class="col-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
+              <h4>Label</h4>
+              <div class="text-muted">Something else</div>
             </div>
 
-          <div style="text-align:center">
-           <input type="submit" onClick="window.location.href='student_selectcode.php'" class="btn btn-info" value="Start" />
-         </div>
+          </section>
 
         </main>
       </div>

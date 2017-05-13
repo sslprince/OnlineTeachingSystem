@@ -1,4 +1,1 @@
-<?php
-$str = "Hello world. I love Shanghai!";
-print_r (explode(" ",$str));
-?>
+<a href="http://www.baidu.com/" title="跳转到百度">百度</a>

@@ -2,6 +2,7 @@
 
 <?php
 require 'database.php';
+@session_start();
     //$db = new Database();
     //$query = "SELECT * from student";
     //$posts = $db->select($query);
@@ -29,7 +30,7 @@ echo 'lala';
 <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="signin.css" rel="stylesheet">
+<link href="css/signin.css" rel="stylesheet">
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -58,7 +59,7 @@ echo 'lala';
 </label>
 </div>
 <?php
-$query = "SELECT `username`, `password`, `symbol` FROM `clientlist` ORDER BY `id`";
+$query = "SELECT `username`, `password`, `symbol`, `class` FROM `clientlist` ORDER BY `id`";
 if(!$query_run= mysql_query($query))
 {
   echo "fail";
@@ -66,14 +67,17 @@ if(!$query_run= mysql_query($query))
  if(!empty($_POST['username'])&& !empty($_POST['password']))
  {
    echo "ok";
+   $_SESSION['username'] = $_POST['username'];
    //$query_run = mysql_query($query);
    while($query_row = @mysql_fetch_assoc($query_run))
    {
      $username = $query_row['username'];
      $password = $query_row['password'];
      $symbol = $query_row['symbol'];
+     $class = $query_row['class'];
      if($username == $_POST['username'] && $password == $_POST['password'] && $symbol == 's')
      {
+       $_SESSION['class']=$class;
        header('Refresh: 0; URL = student_index.php');
      }
      if($username == $_POST['username'] && $password == $_POST['password'] && $symbol == 't')

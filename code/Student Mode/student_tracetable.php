@@ -1,48 +1,171 @@
 <?php
-include 'header_student.php';
 include 'database.php';
-//include 'result.php';
-@session_start();
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <title>trace table</title>
 
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+  </head>
 
-<title>Memory Trace Student Mode</title>
+  <body>
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">Student mode</a>
+<!--
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Help</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+      -->
+    </nav>
 
-<!-- Bootstrap core CSS -->
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="student_index.php">Overview<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="student_selectcode.php">Select code</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="student_tracetable.php">Trace table</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Result</a>
+            </li>
+          </ul>
+        </nav>
 
-<!-- Custom styles for this template -->
-<link href="css/teacher.css" rel="stylesheet">
-</head>
+        <main class="col-sm-9 offset-sm-3 col-md-20 offset-md-2 pt-3">
+            <div style="text-align:center"><h1>Please fill trace table</h1></div>
+            <section class="row text-center placeholders">
+              <div class="col-6 col-sm-3 placeholder">
+                <div style="text-align:left"><h2>Code:</h2></div>
+                <textarea name="comment" rows="15" cols="35">
+<?php $a=$_SESSION['a'];
+      $query = "SELECT `source_file` FROM `file` WHERE name='$a' ";
+      $start=100;
+      $count1=0;
+      if(!$query_run= mysql_query($query))
+      {
+        echo "fail";
+      }
+      while($query_row = @mysql_fetch_assoc($query_run))
+      {
+        foreach($query_row as $value)
+        {
+          $str1=$value;
+        }
+      }
+      $code=(explode("\n",$str1));
+      for($i=0;$i<sizeof($code);$i++)                    //how many columns
+      {
+        if(!strcmp($code[$i],"int main(int argc, const char * argv[]) {"))
+        {
+          $start=$i;
+        }
+        if($i>=$start)
+        {
+          echo "$count1";
+          echo "    ";
+          echo "$code[$i]\n";
+          $count1++;
+        }
+        else
+        {
+          echo "    ";
+          echo "$code[$i]\n";
+        }
+      }
+?>
+                </textarea>
+              </div>
+              <div class="col-6 col-sm-3 placeholder">
+              </div>
 
-<body>
+              <div class="col-6 col-sm-3 placeholder">
+                <div><h2>Trace table:</h2></div>
+                <form name="add_name" id="add_name" method="POST" action="student_check.php">
+                   <table class="" id="dynamic_field" border="1">
+                        <tr>
+                          <?php
+                          $var = array();
+                          $query = "SELECT `variable` FROM `file` WHERE name='$a' ";
+                          if(!$query_run= mysql_query($query))
+                          {
+                            echo "fail";
+                          }
+                          while($query_row = @mysql_fetch_assoc($query_run))
+                          {
+                            foreach($query_row as $value)
+                            {
+                              $str=$value;
+                            }
+                          }
+                          $var=(explode("\n",$str));
+                          echo "<td>statement(s)</td>";                     //current statement
+                          for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
+                          {
+                            echo "<td>$var[$i]</td>";
+                          }
+                           ?>
+                        </tr>
+                        <tr>
+                          <?php
+                          echo '<td><input type="text" name="s[]" /></td>';                     //current statement
+                          for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
+                          {
+                            echo '<td><input class="example" type="text" name="text[]" /></td>';
+                          }
+                           ?>
 
-<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
-<section class="row text-center places">
-<h1>Please fill in the trace table</h1>
-</section>
+                        </tr>
+                   </table>
+                   <br>
+                   <div style="text-align:left">
+                   <button type="button" name="add" id="add" class="btn btn-success">Add Line</button>
+                   <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
+                   </div>
+                   <br><br>
+                   <div style='text-align:left' class='notice'>*Notice: The first statement in trace table must be the <i><strong>int mian()</strong></i> line!</div>
 
-<section class="row text-center placeholders">
-<div class="col-6 col-sm-3 place">
-<h1>Code:</h1>
-<textarea name="comment" rows="20" cols="50">
 <?php
-$a=$_SESSION['a'];
-/*
-$code=$_SESSION['code'];
-foreach($code as $code_value)
-{
-  print "$code_value<br>";
-}
-*/
-$query = "SELECT `source_file` FROM `file` WHERE name='$a' ";
-$start=100;
-$count1=0;
+$result_s = array();
+$query = "SELECT `statement` FROM `file` WHERE name='$a' ";
 if(!$query_run= mysql_query($query))
 {
   echo "fail";
@@ -51,100 +174,52 @@ while($query_row = @mysql_fetch_assoc($query_run))
 {
   foreach($query_row as $value)
   {
-    $str1=$value;
+    $str_s=$value;
   }
 }
-$code=(explode("\n",$str1));
-for($i=0;$i<sizeof($code);$i++)                    //how many columns
-{
-  if(!strcmp($code[$i],"int main(int argc, const char * argv[]) {"))
-  {
-    $start=$i;
-  }
-  if($i>=$start)
-  {
-    echo "$count1";
-    echo "    ";
-    echo "$code[$i]\n";
-
-    $count1++;
-  }
-  else
-  {
-    echo "    ";
-    echo "$code[$i]\n";
-  }
-}
+$result_s=(explode("\n",$str_s));
+array_pop($result_s);
+$_SESSION['result_s']=$result_s;
 
 
  ?>
-</textarea>
-</div>
-<div class="col-6 col-sm-3 place">
-</div>
-<div class="col-6 col-sm-3 place">
-<h1>Trace&nbsp;table:</h1>
-<html>
-  <head>
-       <title>Dynamically Add or Remove input fields in PHP with JQuery</title>
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  </head>
-  <body>
-       <div class="container">
-            <div class="form-group">
-                      <div class="table-responsive">
-                        <form name="add_name" id="add_name" method="POST" action="student_result.php">
-                           <table class="" id="dynamic_field" border="1">
-                                <tr>
-                                  <?php
-                                  $var = array();
-                                  $query = "SELECT `variable` FROM `file` WHERE name='$a' ";
-                                  if(!$query_run= mysql_query($query))
-                                  {
-                                    echo "fail";
-                                  }
-                                  while($query_row = @mysql_fetch_assoc($query_run))
-                                  {
-                                    foreach($query_row as $value)
-                                    {
-                                      $str=$value;
-                                    }
-                                  }
-                                  $var=(explode("\n",$str));
-                                  echo "<td>statement(s)</td>";                     //current statement
-                                  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
-                                  {
-                                    echo "<td>$var[$i]</td>";
-                                  }
-                                   ?>
-                                </tr>
-                                <tr>
-                                  <?php
-                                  echo '<td><input type="text" name="s[]" /></td>';                     //current statement
-                                  for($i=0;$i<sizeof($var)-1;$i++)                    //how many columns
-                                  {
-                                    echo '<td><input type="text" name="text[]" /></td>';
-                                  }
-                                   ?>
-
-                                </tr>
-                           </table>
-                           <button type="button" name="add" id="add" class="btn btn-success">Add Line</button>
-                           <input type="submit" name="submit" id="submit" class="btn btn-info" value="Submit" />
-                      </div>
                 </form>
-            </div>
-       </div>
+              </div>
+            </section>
+        </main>
+      </div>
+    </div>
   </body>
+
+<style>
+.notice{
+  width:500px;
+  height:80px;
+}
+
+input[type=text]{
+    width: 100%;
+    padding: 5px 20%;
+    margin: 2px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.example {
+width: 100%;
+max-width: 120px;
+min-width: 80px;
+}
+</style>
+
 </html>
 <script>
 $(document).ready(function(){
   var i=1;
   $('#add').click(function(){
        i++;
-       $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="s[]" /></td><?php for($i=0;$i<sizeof($var)-1;$i++){ echo '<td><input type="text" name="text[]" /></td>'; } ?><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+       $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="s[]" /></td><?php for($i=0;$i<sizeof($var)-1;$i++){ echo '<td><input class="example" type="text" name="text[]" /></td>'; } ?><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
   });
   $(document).on('click', '.btn_remove', function(){
        var button_id = $(this).attr("id");
@@ -162,144 +237,8 @@ $(document).ready(function(){
               alert("data");
               $('#add_name')[0].reset();
               */
-
-
          }
     });
-    <?php
-
-/*
-    $myfile = fopen("result.txt", "w") or die("Unable to open file!");
-    for ($i=0; $i<sizeof($text); $i++)
-    {
-      $txt = "$text[$i]\n";
-      fwrite($myfile, $txt);
-    }
-    fclose($myfile);
-    */
-
-       ?>
   });
 });
 </script>
-
-<textarea>
-<?php
-$x=@$_POST["text"];
-$y=@$_POST["s"];
-$count_v=0;
-$count_s=0;
-$result = array();
-for($i=0; $i<sizeof($x); $i++)
-{
-  if(isset($x[$i]) && strlen($x[$i])!=0)
-  {
-    $count_v++;
-  }
-}
-for($i=0; $i<sizeof($y); $i++)
-{
-  if(isset($y[$i]) && strlen($y[$i])!=0)
-  {
-    $count_s++;
-  }
-}
-if(isset($x) && !empty($x))
-{
-  if($count_s==sizeof($y) && $count_v==sizeof($x))
-  {
-    /*
-    for ($i=0; $i<sizeof($x); $i++)
-    {
-      $query_insert = "INSERT INTO results (result) VALUES ($x[$i])";
-      if(@$query_insert_run = mysql_query($query_insert))
-      {
-        echo "OK";
-      }
-    }
-    for($i=0; $i<sizeof($y); $i++)
-    {
-      $query_insert = "INSERT INTO statements (statement) VALUES ($y[$i])";
-      if(@$query_insert_run = mysql_query($query_insert))
-      {
-        echo "OK";
-      }
-    }
-    echo "\n";
-    echo "insert successfully";
-    */
-    $query = "SELECT `solution` FROM `file` WHERE name='$a' ";
-    if(!$query_run= mysql_query($query))
-    {
-      echo "fail";
-    }
-    while($query_row = @mysql_fetch_assoc($query_run))
-    {
-      foreach($query_row as $value)
-      {
-        $str2=$value;
-      }
-    }
-    $result=(explode("\n",$str2));
-    array_pop($result);
-
-  }
-  else {
-    echo "please fill in ! \nThere are some blanks!";
-  }
-
-}
-
-?>
-</textarea>
-
-
-    <?php
-    $_SESSION['result'] = $result;
-    $_SESSION['x'] = $x;
-    if(sizeof($result)==sizeof($x))
-    {
-      for($i=0; $i<sizeof($result); $i++)
-      {
-        if($result[$i] != $x[$i])
-        {
-        }
-      }
-    }
-    else
-    {
-      echo "Please fill in again!";
-    }
-
-
-    //print_r($_POST['text']);
-  //$_SESSION['count_line'] = $count_line;
-  //$_SESSION['p'] = $p;
-  //$_SESSION['text'] = $text;
-  //<button id="button1" type="button" onclick="clickbutton()">Add</button>
-//$_SESSION['text'] = $_POST[$text];
-  ?>
-</div>
-
-</section>
-
-
-<section class="row text-center placeholders1">
-
-</section>
-</body>
-</html>
-
-
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-<script src="js/bootstrap.js"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="js/ie10-viewport-bug-workaround.js"></script>
-</body>
-</html>
