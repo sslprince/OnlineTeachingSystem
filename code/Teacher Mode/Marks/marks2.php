@@ -1,10 +1,10 @@
 <?php include 'database.php';?>
-<?php include 'config/Config.php';?>
 <?php include 'header.php';?>
-<?php session_start();?>
+<?php include 'config/Config.php';?>
 <?php
   $db = new database();
 ?>
+<?php session_start();?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,22 +12,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <link href="../../css/bootstrap.css" rel="stylesheet">
   <link href="../../css/dashboard.css" rel="stylesheet">
 
-
 <title>Memory Trace Teacher Mode</title>
+
+<!-- Bootstrap core CSS -->
 <?php
-    $query = "SELECT filename,avg(score),MAX(score),MIN(score) from Score group by filename";
+    $query = "SELECT class,count(username) from clientlist group by class";
     $re = $db->select($query);
 ?>
-<!-- Bootstrap core CSS -->
+
 <?php
 $xdata=array();
 $ydata=array();
+$a="";
 ?>
 <?php
-        $query = "SELECT distinct filename FROM Score";
+        $query = "SELECT distinct class FROM clientlist";
         $res = $db->select($query);
         $res1=null;
     ?>
@@ -50,22 +53,22 @@ $ydata=array();
 
 
   <div class ="parent">
+  <form name="form1" enctype="multipart/form-data" method="post" action="">
     <table class = "table table-striped">
-    <caption><h2>MARK TABLE</h2></caption>
+    <caption><h2>Class Information</h2></caption>
           <tr>
-               <td>Filename</td>
-               <td>Average score</td>
-                <td>Max score</td>
-                <td>Min score</td>
+               <td>Class</td>
+               <td>Student number</td>
+
           </tr>
 
           <?php while($row = mysqli_fetch_assoc($re)){
-            echo"<tr>";
 
-               echo"<td>".$row['filename']."</td>";
-               echo"<td>".$row['avg(score)']."</td>";
-               echo"<td>".$row['MAX(score)']."</td>";
-               echo"<td>".$row['MIN(score)']."</td>";
+            echo"<tr>";
+              if($row['class']!=null){
+               echo"<td>".$row['class']."</td>";
+               echo"<td>".$row['count(username)']."</td>";
+             }
 
             echo"</tr>";
 
@@ -73,25 +76,45 @@ $ydata=array();
 
 
     </table>
-  <form name="form1" enctype="multipart/form-data" method="post" action="">
   <label>
-    <caption><h2>Select filename</h2></caption>
+    <h1>Select</h1>
   <select name="select">
 
               <?php while($row = mysqli_fetch_assoc($res)): ?>
-
-                <li><option value="<?php echo $row['filename']?>"><?php echo $row['filename']?></option></li>
-
+                <?php if($row['class']!=null){?>
+                <li><option value="<?php echo $row['class']?>"><?php echo $row['class']?></option></li>
+                <?php }?>
 
               <?php endwhile;?>
 
 
 </select>
 </label>
+
+
+<?php
+        $query = "SELECT distinct filename FROM Score   ";
+        $res3 = $db->select($query);
+        $res1=null;
+    ?>
+<form name="form1" enctype="multipart/form-data" method="post" action="">
 <label>
-<input type="submit" class="btn btn-info" name="Submit" value="Results">
+<select name="selectfile">
+
+            <?php while($row = mysqli_fetch_assoc($res3)): ?>
+
+              <li><option value="<?php echo $row['filename']?>"><?php echo $row['filename']?></option></li>
+
+
+            <?php endwhile;?>
+
+
+</select>
 </label>
 
+<label>
+<input type="submit" class="btn btn-info" name="Submit" value="Submit">
+</label>
 </form>
 <?php
 $ga=0;
@@ -101,27 +124,28 @@ $gd=0;
 $ge=0;
 if( $_POST )
 {
-
+global $a;
+echo "$a";
   $a = $_POST['select'];
-  $query1 = "SELECT Score.studentname,Score.score,clientlist.class FROM Score,clientlist  WHERE filename = '$a' AND Score.studentname=clientlist.username And clientlist.symbol ='s' Order by Score.score desc";
+  $b = $_POST['selectfile'];
+  if($a!=null&&$b!=null){
+  $query1 = "SELECT studentname,filename,score FROM Score  WHERE studentname=any(SELECT username FROM clientlist WHERE class = '$a') And filename='$b' order by score desc";
   $res1 = $db->select($query1);
-  $query3 = "SELECT Score.studentname,Score.score,clientlist.class FROM Score,clientlist  WHERE filename = '$a' AND Score.studentname=clientlist.username And clientlist.symbol ='s' Order by Score.score desc";
-  $res3 = $db->select($query3);
-  $query2 ="SELECT avg(score) FROM Score,clientlist WHERE filename = '$a'AND Score.studentname=clientlist.username";
+  $query2 ="SELECT avg(score) FROM Score WHERE filename = '$b' And studentname = any(SELECT username From clientlist WHERE class ='$a')";
   $res2 = $db->select($query2);
-  $query4 ="SELECT avg(score) FROM Score,clientlist WHERE filename = '$a'AND Score.studentname=clientlist.username";
+  $query3 = "SELECT studentname,filename,score FROM Score  WHERE studentname=any(SELECT username FROM clientlist WHERE class = '$a') And filename='$b' order by score desc";
+  $res3 = $db->select($query3);
+  $query4 ="SELECT avg(score) FROM Score WHERE filename = '$b' And studentname = any(SELECT username From clientlist WHERE class ='$a')";
   $res4 = $db->select($query4);
+}
 ?>
 <table class = "table table-striped">
 <caption><h2><?php echo $a?></h2></caption>
-    <!--  <tr>
-           <td>studentname</td>
 
-           <td>score</td>
-            <td>class</td>
-      </tr> -->
       <?php $count = 0;?>
-      <?php while($row = mysqli_fetch_assoc($res1)){
+      <?php
+      if($res1!=null){
+      while($row = mysqli_fetch_assoc($res1)){
         global $count;
         global $xdata;
         global $ydata;
@@ -150,17 +174,18 @@ if( $_POST )
         /*echo"<tr>";
 
            echo"<td>".$xdata[$count]."</td>";
+           echo"<td>".$row['filename']."</td>";
            echo"<td>".$ydata[$count]."</td>";
-           echo"<td>".$row['class']."</td>";
 
-
-        echo"</tr>";
-        $count++;*/
+        echo"</tr>";*/
+        $count++;
+      }
       }?>
       <?php /*while($row2 = mysqli_fetch_assoc($res2)){
       $xdata[]="average";
       $ydata[]=$row2['avg(score)'];
       echo"<td>"."average"."</td>";
+      echo"<td>"." "."</td>";
       echo"<td>".$row2['avg(score)']."</td>";
     }*/?>
 
@@ -209,20 +234,17 @@ $graph->Stroke('../../lalalal.jpg');
 <img src="../../lalalal.jpg">
 </div>
 
-
-
-
-
 <table class = "table table-striped">
 
-   <tr>
+      <tr>
            <td>studentname</td>
 
            <td>score</td>
-            <td>class</td>
       </tr>
       <?php $count = 0;?>
-      <?php while($row = mysqli_fetch_assoc($res3)){
+      <?php
+      if($res1!=null){
+      while($row = mysqli_fetch_assoc($res3)){
         global $count;
         global $xdata;
         global $ydata;
@@ -246,28 +268,44 @@ $graph->Stroke('../../lalalal.jpg');
         else if($row['score']<50){
           $ge++;
         }
-
+        $xdata[]=$row['studentname'];
+        $ydata[]=$row['score'];
         echo"<tr>";
-           echo"<td>".$row['studentname']."</td>";
-           echo"<td>".$row['score']."</td>";
-           echo"<td>".$row['class']."</td>";
 
+           echo"<td>".$xdata[$count]."</td>";
+
+           echo"<td>".$ydata[$count]."</td>";
 
         echo"</tr>";
         $count++;
+      }
       }?>
-      <?php while($row2 = mysqli_fetch_assoc($res2)){
+      <?php while($row2 = mysqli_fetch_assoc($res4)){
       $xdata[]="average";
       $ydata[]=$row2['avg(score)'];
       echo"<td>"."average"."</td>";
+
       echo"<td>".$row2['avg(score)']."</td>";
     }?>
 
 </table>
-
 </div>
 
 <?php } ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

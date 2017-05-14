@@ -46,9 +46,7 @@ $ydata=array();
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 
-<header>
-<h1>Source File </h1>
-</header>
+
 <ul>
 <?php
 
@@ -64,7 +62,6 @@ $ydata=array();
 <table class = "table table-striped">
 <caption><h2>MARK TABLE</h2></caption>
       <tr>
-           <td>ID</td>
            <td>studentname</td>
            <td>filename</td>
            <td>class</td>
@@ -72,7 +69,6 @@ $ydata=array();
       </tr>
       <?php while($row = mysqli_fetch_assoc($res)){
         echo"<tr>";
-          echo"<td>".$row['ID']."</td>";
            echo"<td>".$row['studentname']."</td>";
            echo"<td>".$row['filename']."</td>";
            echo"<td>".$row['class']."</td>";
@@ -86,8 +82,8 @@ $ydata=array();
 
 </ul>
 
-<input type="button" onclick="window.location.href='marks1.php'" value="Source File"/>
-<input type="button" onclick="window.location.href='marks2.php'" value="Classes"/>
+<input type="button" class="btn btn-info" onclick="window.location.href='marks1.php'" value="Source File"/>
+<input type="button" class="btn btn-info" onclick="window.location.href='marks2.php'" value="Classes"/>
 </div>
 
 <header>
