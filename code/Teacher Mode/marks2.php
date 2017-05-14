@@ -113,7 +113,7 @@ $a="";
 </label>
 
 <label>
-<input type="submit" name="Submit" value="Submit">
+<input type="submit" class="btn btn-info" name="Submit" value="Submit">
 </label>
 </form>
 <?php
@@ -133,15 +133,15 @@ echo "$a";
   $res1 = $db->select($query1);
   $query2 ="SELECT avg(score) FROM Score WHERE filename = '$b' And studentname = any(SELECT username From clientlist WHERE class ='$a')";
   $res2 = $db->select($query2);
+  $query3 = "SELECT studentname,filename,score FROM Score  WHERE studentname=any(SELECT username FROM clientlist WHERE class = '$a') And filename='$b' order by score desc";
+  $res3 = $db->select($query3);
+  $query4 ="SELECT avg(score) FROM Score WHERE filename = '$b' And studentname = any(SELECT username From clientlist WHERE class ='$a')";
+  $res4 = $db->select($query4);
 }
 ?>
 <table class = "table table-striped">
 <caption><h2><?php echo $a?></h2></caption>
-      <tr>
-           <td>studentname</td>
-           <td>filename</td>
-           <td>score</td>
-      </tr>
+
       <?php $count = 0;?>
       <?php
       if($res1!=null){
@@ -171,23 +171,23 @@ echo "$a";
         }
         $xdata[]=$row['studentname'];
         $ydata[]=$row['score'];
-        echo"<tr>";
+        /*echo"<tr>";
 
            echo"<td>".$xdata[$count]."</td>";
            echo"<td>".$row['filename']."</td>";
            echo"<td>".$ydata[$count]."</td>";
 
-        echo"</tr>";
+        echo"</tr>";*/
         $count++;
       }
       }?>
-      <?php while($row2 = mysqli_fetch_assoc($res2)){
+      <?php /*while($row2 = mysqli_fetch_assoc($res2)){
       $xdata[]="average";
       $ydata[]=$row2['avg(score)'];
       echo"<td>"."average"."</td>";
       echo"<td>"." "."</td>";
       echo"<td>".$row2['avg(score)']."</td>";
-    }?>
+    }*/?>
 
 </table>
 <?php
@@ -198,7 +198,7 @@ global $gd;
 global $ge;
 require_once ("jpgraph-4.0.2/jpgraph/jpgraph.php");
 require_once ("jpgraph-4.0.2/jpgraph/jpgraph_pie.php");
-require_once ("jpgraph-4.0.2/jpgraph/jpgraph_pie3d.php");
+//require_once ("jpgraph-4.0.2/jpgraph/jpgraph_pie3d.php");
 /*global $xdata;
 global $ydata;
 $graph = new Graph(300,200);  //创建新的Graph对象
@@ -221,10 +221,10 @@ $data=array($ga,$gb,$gc,$gd,$ge);
 $graph=new pieGraph(650,500);
 $graph->img->SetMargin(30,30,80,40);
 $graph->title->Set("Performace Level");
-$pie3dplot=new piePlot3d($data);  //定义饼图
-$pie3dplot->SetLegends(array('HD','D','C','P','F'));
-$graph->legend->Pos(0.01,0.45,"left","center");
-$graph->Add($pie3dplot);
+$pieplot=new piePlot($data);  //定义饼图
+$pieplot->SetLegends(array('HD','D','C','P','F'));
+$graph->legend->Pos(0.1,0.9,"left","center");
+$graph->Add($pieplot);
 
 $graph->Stroke('../../lalalal.jpg');
 ?>
@@ -233,6 +233,62 @@ $graph->Stroke('../../lalalal.jpg');
 <div class ="child">
 <img src="../../lalalal.jpg">
 </div>
+
+<table class = "table table-striped">
+
+      <tr>
+           <td>studentname</td>
+
+           <td>score</td>
+      </tr>
+      <?php $count = 0;?>
+      <?php
+      if($res1!=null){
+      while($row = mysqli_fetch_assoc($res3)){
+        global $count;
+        global $xdata;
+        global $ydata;
+        global $ga;
+        global $gb;
+        global $gc;
+        global $gd;
+        global $ge;
+        if($row['score']>=85){
+          $ga++;
+        }
+        else if($row['score']<85&&$row['score']>=75){
+          $gb++;
+        }
+        else if($row['score']<75&&$row['score']>=65){
+          $gc++;
+        }
+        else if($row['score']<65&&$row['score']>=50){
+          $gd++;
+        }
+        else if($row['score']<50){
+          $ge++;
+        }
+        $xdata[]=$row['studentname'];
+        $ydata[]=$row['score'];
+        echo"<tr>";
+
+           echo"<td>".$xdata[$count]."</td>";
+
+           echo"<td>".$ydata[$count]."</td>";
+
+        echo"</tr>";
+        $count++;
+      }
+      }?>
+      <?php while($row2 = mysqli_fetch_assoc($res4)){
+      $xdata[]="average";
+      $ydata[]=$row2['avg(score)'];
+      echo"<td>"."average"."</td>";
+
+      echo"<td>".$row2['avg(score)']."</td>";
+    }?>
+
+</table>
 </div>
 
 <?php } ?>
@@ -256,7 +312,7 @@ $graph->Stroke('../../lalalal.jpg');
 
 
 
-<input type="button" onClick="window.location.href='marks.php'" value="Back"/>
+<input type="button" class="btn btn-info" onClick="window.location.href='marks.php'" value="Back"/>
 
 </div>
 

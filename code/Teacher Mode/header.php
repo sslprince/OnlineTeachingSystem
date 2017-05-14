@@ -39,17 +39,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php">Teacher Mode</a>
+          <a class="navbar-brand" href="../upload/index.php">Teacher Mode</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Student Mode</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="../upload/index.php">Home</a></li>
+            <li><a href="../../student_index.php">Student Mode</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+
         </div>
       </div>
     </nav>
@@ -58,17 +55,19 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="index.php">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="a.php">Upload C Code</a></li>
-            <li><a href="marks1.php">Students' Marks</a></li>
-            <li><a href="#">Error Analytics</a></li>
+            <li class="active"><a href="../upload/index.php">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="../view/viewcode.php">View C Code</a></li>
+            <li><a href="../upload/teacher_index.php">Edit C Code</a></li>
+            <li><a href="../marks/marks.php">Students' Marks</a></li>
+            <li><a href="../errors/errors.php">Error Analytics</a></li>
+            <li><a href="../student_information/information.php">Students' Information</a></li>
           </ul>
         </div>
 
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-           <div class="row placeholders">
-                       <div class="col-xs-6 col-sm-3 placeholder">
-      </div>
+           <section class="row text-center places">
+           <h1>Students' Marks</h1>
+           </section>
     </div>
 </div>
     <!-- Bootstrap core JavaScript
