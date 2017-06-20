@@ -1,0 +1,18 @@
+(gdb) dd = 0
+hn = 0
+n = 0
+(gdb) dd = 100
+hn = 0
+n = 0
+dd = 100
+hn = 50
+n = 0
+dd = 200
+hn = 50
+n = 0
+dd = 200
+hn = 25
+n = 0
+No symbol table info available.
+No frame selected.
+(gdb) quit
